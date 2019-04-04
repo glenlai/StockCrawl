@@ -19,7 +19,7 @@ import codecs
 import sys
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials as SAC
-
+import locale
 #def loop_find():
 
 
@@ -55,6 +55,14 @@ def parser(a):
         list1.append(tags.string)
     #將一維轉二維
     test = [[list1[i+9*j] for i in range(9)]for j in range (1,(int(len(list1)/9)))]
+    
+    l = int(len(test))
+    print(l)
+    
+    for i in range(0,l):
+        test[i][1] = int(test[i][1].replace(',',''))
+        #print(test[i][1])
+    
 
     return test
     
@@ -91,14 +99,17 @@ def to_gsheet(k):
     return 0
 
 time_start = time.time()
+num = 0
 for i in range(1,13):
-    num = 0
+    
     my_params = enter_stock_detail(i)
     r =get_url(my_params)
     k = parser(r)
     print(len(k))
     num = num+len(k)
     to_gsheet(k)
+    time.sleep(1)
+    
 time_end = time.time()
 
 print("it costs %f sec" %(time_end-time_start))
